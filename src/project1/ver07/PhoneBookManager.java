@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
 
+
 public class PhoneBookManager implements SubMenuItem{
 
 	HashSet<PhoneInfo> set;
@@ -12,14 +13,6 @@ public class PhoneBookManager implements SubMenuItem{
 	public PhoneBookManager(int num) {
 		set = new HashSet<PhoneInfo>();
 	}
-	
-	
-	
-	@Override
-	public String toString() {
-		return "PhoneBookManager [set=" + set + "]";
-	}
-
 
 
 	public void dataInput(int choice) {
@@ -31,9 +24,7 @@ public class PhoneBookManager implements SubMenuItem{
 		int run = scan.nextInt();
 		scan.nextLine();
 		
-		
-		
-		String pName, pPhoneNumber, pBirthday, pjun, pcom;
+		String pName, pPhoneNumber, pjun, pcom;
 		int phak;
 		
 		switch(run) {
@@ -44,6 +35,8 @@ public class PhoneBookManager implements SubMenuItem{
 			pPhoneNumber = scan.nextLine();
 			
 			set.add(new PhoneInfo(pName, pPhoneNumber));
+			
+			
 			break;
 		case Gyu:
 			System.out.println("이름: "); 
@@ -68,6 +61,9 @@ public class PhoneBookManager implements SubMenuItem{
 			set.add(new PhoneCompanyInfo(pName, pPhoneNumber, pcom));
 			break;
 		}
+		
+		
+		
 		
 		System.out.println("데이터 입력이 완료되었습니다.");
 		
@@ -125,8 +121,8 @@ public class PhoneBookManager implements SubMenuItem{
 	}
 	
 	public void dataAllShow() {
-		for(int i =0; i<set.size(); i++) {
-			
+		for(PhoneInfo pi : set) {
+			pi.showPhoneInfio();
 		}
 	}
 	

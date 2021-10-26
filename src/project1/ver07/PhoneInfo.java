@@ -22,5 +22,23 @@ public class PhoneInfo {
 		System.out.println();
 	}
 	
+	@Override
+	public int hashCode() {
+		int namehashCode = name.hashCode();
+		return namehashCode;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		PhoneInfo phoneinfo = (PhoneInfo)obj;
+		if(phoneinfo.name.equals(this.name)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
 
 }
