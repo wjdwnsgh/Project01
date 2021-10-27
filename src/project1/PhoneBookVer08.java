@@ -1,14 +1,15 @@
 package project1;
 
+import java.io.IOException;
 import java.util.Scanner;
 
-import project1.ver07.MenuItem;
-import project1.ver07.PhoneBookManager;
-import project1.ver07.PhoneInfo;
-import project1.ver07.MenuSelectException;
+import project1.ver08.MenuItem;
+import project1.ver08.PhoneBookManager;
+import project1.ver08.PhoneInfo;
 
 
-public class PhoneBookVer07 implements MenuItem {
+public class PhoneBookVer08 implements MenuItem {
+	
 
 	public static void main(String[] args) {
 
@@ -35,6 +36,7 @@ public class PhoneBookVer07 implements MenuItem {
 				break;
 			case EXIT:
 				System.out.println("프로그램을 종료합니다.");
+				pb1.output();
 				return;
 			}
 			System.out.println();

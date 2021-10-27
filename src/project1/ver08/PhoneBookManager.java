@@ -1,5 +1,12 @@
-package project1.ver07;
+package project1.ver08;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -12,9 +19,14 @@ public class PhoneBookManager implements SubMenuItem{
 	
 	public PhoneBookManager() {
 		set = new HashSet<PhoneInfo>();
+		
+		input();
+		/*
+		input 부분은 반드시 생성자에서 호출하기 그래야
+		재생버튼 누르자마자 복원을 함
+		 */
 	}
-
-
+	
 	public void dataInput(int choice) {
 		
 		Scanner scan = new Scanner(System.in);
@@ -33,26 +45,7 @@ public class PhoneBookManager implements SubMenuItem{
 			pName = scan.nextLine();
 			System.out.println("전화번호: "); 
 			pPhoneNumber = scan.nextLine();
-			
-			boolean isFind = false;
-			for(PhoneInfo pi : set) {
-				if(pi.name.equals(pName)) {
-					isFind = true;
-				}
-			
-				if(isFind = true) {
-					System.out.println("이미 저장된 데이터입니다.");
-					System.out.println("덮어쓸까요? Y(y)/N(n)");
-					String Yn = scan.next();
-					scan.nextLine();
-					if(Yn.equals("y") || Yn.equals("Y")) {
-						set.remove(pi);
-					}
-					else if(Yn.equals("n") || Yn.equals("N")) {
-						set.add(new PhoneInfo(pName, pPhoneNumber));
-					}
-				}
-			}
+
 			set.add(new PhoneInfo(pName, pPhoneNumber));
 			break;
 		case Hak:
@@ -65,25 +58,6 @@ public class PhoneBookManager implements SubMenuItem{
 			System.out.println("학년: ");
 			phak = scan.nextInt();
 			
-			
-			for(PhoneInfo pi : set) {
-				if(pi.name.equals(pName)) {
-					isFind = true;
-				}
-			
-				if(isFind = true) {
-					System.out.println("이미 저장된 데이터입니다.");
-					System.out.println("덮어쓸까요? Y(y)/N(n)");
-					String Yn = scan.next();
-					scan.nextLine();
-					if(Yn.equals("y") || Yn.equals("Y")) {
-						set.remove(pi);
-					}
-					else if(Yn.equals("n") || Yn.equals("N")) {
-						set.add(new PhoneInfo(pName, pPhoneNumber));
-					}
-				}
-			}
 			set.add(new PhoneSchoolInfo(pName, pPhoneNumber, pjun, phak));
 			break;
 		case SA:
@@ -94,29 +68,9 @@ public class PhoneBookManager implements SubMenuItem{
 			System.out.println("회사: ");
 			pcom = scan.nextLine();
 			
-			
-			for(PhoneInfo pi : set) {
-				if(pi.name.equals(pName)) {
-					isFind = true;
-				}
-			
-				if(isFind = true) {
-					System.out.println("이미 저장된 데이터입니다.");
-					System.out.println("덮어쓸까요? Y(y)/N(n)");
-					String Yn = scan.next();
-					scan.nextLine();
-					if(Yn.equals("y") || Yn.equals("Y")) {
-						set.remove(pi);
-					}
-					else if(Yn.equals("n") || Yn.equals("N")) {
-						set.add(new PhoneInfo(pName, pPhoneNumber));
-					}
-				}
-			}
 			set.add(new PhoneCompanyInfo(pName, pPhoneNumber, pcom));
 			break;
 		}
-		
 		
 		
 		System.out.println("데이터 입력이 완료되었습니다.");
@@ -180,6 +134,42 @@ public class PhoneBookManager implements SubMenuItem{
 		}
 	}
 	
+	public void output() {
+		try {
+			ObjectOutputStream out = 
+					new ObjectOutputStream(
+							new FileOutputStream("src/project1/ver08/PhoneBook.obj"));
+			
+			for(PhoneInfo pi : set) {
+				out.writeObject(pi);
+			}
+			out.close();
+		}
+		catch(Exception e) {
+			
+		}
+		
+	}
+	
+	public void input() {
+		try {
+			ObjectInputStream in = 
+					new ObjectInputStream(
+							new FileInputStream("src/project1/ver08/PhoneBook.obj"));
+			
+			while(true) {
+				PhoneInfo pi = (PhoneInfo)in.readObject();
+				set.add(pi);
+				if(pi==null) break;
+			}
+			in.close();
+		}
+		catch(Exception e) {
+			System.out.println("복원완료");
+		}
+		
+	}
+	
 	public void printMenu() {
 		System.out.println("=====숫자를 입력해주세요.=====");
 		System.out.print("1.데이터 입력 ");
@@ -188,7 +178,5 @@ public class PhoneBookManager implements SubMenuItem{
 		System.out.println("4.주소록 출력");
 		System.out.println("5.프로그램 종료");
 		System.out.println("선택 : ");
-		System.out.println("===============================");
-		System.out.println();
 	}
 }
