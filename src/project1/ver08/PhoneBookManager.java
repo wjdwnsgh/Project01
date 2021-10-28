@@ -3,16 +3,18 @@ package project1.ver08;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
 
 
-public class PhoneBookManager implements SubMenuItem{
+public class PhoneBookManager implements SubMenuItem {
 
 	HashSet<PhoneInfo> set;
 	
@@ -170,13 +172,51 @@ public class PhoneBookManager implements SubMenuItem{
 		
 	}
 	
+	
+	
+	public void thread() {
+		System.out.println("저장옵션 선택!");
+		System.out.println("자동저장on(1) 자동저장off(2)");
+		System.out.println("선택");
+		Scanner scan = new Scanner(System.in);
+		int num = scan.nextInt();
+		
+		AutoSaverT save = new AutoSaverT(this);
+		
+		if(num==1) {
+			if(save.isAlive()) {
+				System.out.println("이미 자동저장이 진행중 입니다.");
+			}
+			else {
+				save.setDaemon(true);
+				save.start();
+			}
+		}
+		else if(num==2) {
+			save.interrupt();
+		}
+	}
+	
+	public void FileTxt() throws IOException{
+		PrintWriter pw = new PrintWriter(new FileWriter("src/project1/Ver08/AutoSaveBook.txt"));
+		try {
+			
+			
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void printMenu() {
 		System.out.println("=====숫자를 입력해주세요.=====");
 		System.out.print("1.데이터 입력 ");
 		System.out.println("2.데이터 검색");
 		System.out.print("3.데이터 삭제 ");
 		System.out.println("4.주소록 출력");
-		System.out.println("5.프로그램 종료");
+		System.out.print("5.저장옵션 ");
+		System.out.println("6.프로그램 종료");
 		System.out.println("선택 : ");
 	}
 }

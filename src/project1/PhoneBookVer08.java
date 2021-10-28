@@ -34,6 +34,9 @@ public class PhoneBookVer08 implements MenuItem {
 			case SHOW:
 				pb1.dataAllShow();
 				break;
+			case IO:
+				pb1.thread();
+				break;
 			case EXIT:
 				System.out.println("프로그램을 종료합니다.");
 				pb1.output();
