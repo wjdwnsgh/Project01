@@ -6,14 +6,15 @@ import java.util.Scanner;
 import project1.ver08.MenuItem;
 import project1.ver08.PhoneBookManager;
 import project1.ver08.PhoneInfo;
+import project1.ver08.AutoSaverT;
 
-
-public class PhoneBookVer08 implements MenuItem {
+public class PhoneBookVer08 implements MenuItem{
 	
 
 	public static void main(String[] args) {
 
 		PhoneBookManager pb1 = new PhoneBookManager();
+		AutoSaverT as = new AutoSaverT(pb1);
 		
 		Scanner scan = new Scanner(System.in);
 		while(true) {
@@ -35,7 +36,15 @@ public class PhoneBookVer08 implements MenuItem {
 				pb1.dataAllShow();
 				break;
 			case IO:
-				pb1.thread();
+				try {
+					if(!as.isAlive()) {
+						as = new AutoSaverT(pb1);
+					}
+				}
+				catch(Exception e) {
+					as = new AutoSaverT(pb1);
+				}
+				pb1.thread(as);
 				break;
 			case EXIT:
 				System.out.println("프로그램을 종료합니다.");

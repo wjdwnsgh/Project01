@@ -1,22 +1,23 @@
 package project1.ver08;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
 
 
+
+
+
 public class PhoneBookManager implements SubMenuItem {
 
-	HashSet<PhoneInfo> set;
+	HashSet<PhoneInfo> set = new HashSet<PhoneInfo>();
 	
 	
 	public PhoneBookManager() {
@@ -48,7 +49,26 @@ public class PhoneBookManager implements SubMenuItem {
 			System.out.println("전화번호: "); 
 			pPhoneNumber = scan.nextLine();
 
-			set.add(new PhoneInfo(pName, pPhoneNumber));
+			PhoneInfo pi = new PhoneInfo(pName, pPhoneNumber);
+			boolean isAdd = set.add(pi);
+			if(isAdd==true) {
+				System.out.println("데이터 입력이 완료되었습니다.");
+			}
+			else {
+				System.out.println("이미 저장된 데이터입니다.");
+				System.out.println("덮어쓸까요? Y(y)/N(n)");
+				String Yn = scan.next();
+				scan.nextLine();
+				if(Yn.equalsIgnoreCase("Y") || Yn.equalsIgnoreCase("y")) {
+					set.remove(pi);
+					set.add(new PhoneInfo(pName, pPhoneNumber));
+					System.out.println("입력이 완료되었습니다.");
+				}
+				else if(Yn.equalsIgnoreCase("N") || Yn.equalsIgnoreCase("n")) {
+					System.out.println("입력이 완료되었습니다.");
+				}
+			}
+			
 			break;
 		case Hak:
 			System.out.println("이름: "); 
@@ -60,7 +80,26 @@ public class PhoneBookManager implements SubMenuItem {
 			System.out.println("학년: ");
 			phak = scan.nextInt();
 			
-			set.add(new PhoneSchoolInfo(pName, pPhoneNumber, pjun, phak));
+			PhoneInfo pi2 = new PhoneSchoolInfo(pName, pPhoneNumber, pjun, phak);
+			boolean isAdd2 = set.add(pi2);
+			if(isAdd2==true) {
+				System.out.println("데이터 입력이 완료되었습니다.");
+			}
+			else {
+				System.out.println("이미 저장된 데이터입니다.");
+				System.out.println("덮어쓸까요? Y(y)/N(n)");
+				String Yn = scan.next();
+				scan.nextLine();
+				if(Yn.equalsIgnoreCase("Y") || Yn.equalsIgnoreCase("y")) {
+					set.remove(pi2);
+					set.add(new PhoneSchoolInfo(pName, pPhoneNumber, pjun, phak));
+					System.out.println("입력이 완료되었습니다.");
+				}
+				else if(Yn.equalsIgnoreCase("N") || Yn.equalsIgnoreCase("n")) {
+					System.out.println("입력이 완료되었습니다.");
+				}
+			}
+			
 			break;
 		case SA:
 			System.out.println("이름: "); 
@@ -70,12 +109,28 @@ public class PhoneBookManager implements SubMenuItem {
 			System.out.println("회사: ");
 			pcom = scan.nextLine();
 			
-			set.add(new PhoneCompanyInfo(pName, pPhoneNumber, pcom));
+			PhoneInfo pi3 = new PhoneCompanyInfo(pName, pPhoneNumber, pcom);
+			boolean isAdd3 = set.add(pi3);
+			if(isAdd3==true) {
+				System.out.println("데이터 입력이 완료되었습니다.");
+			}
+			else {
+				System.out.println("이미 저장된 데이터입니다.");
+				System.out.println("덮어쓸까요? Y(y)/N(n)");
+				String Yn = scan.next();
+				scan.nextLine();
+				if(Yn.equalsIgnoreCase("Y") || Yn.equalsIgnoreCase("y")) {
+					set.remove(pi3);
+					set.add(new PhoneCompanyInfo(pName, pPhoneNumber, pcom));
+					System.out.println("입력이 완료되었습니다.");
+				}
+				else if(Yn.equalsIgnoreCase("N") || Yn.equalsIgnoreCase("n")) {
+					System.out.println("입력이 완료되었습니다.");
+				}
+			}
+			
 			break;
 		}
-		
-		
-		System.out.println("데이터 입력이 완료되었습니다.");
 		
 	}
 	
@@ -174,38 +229,46 @@ public class PhoneBookManager implements SubMenuItem {
 	
 	
 	
-	public void thread() {
+	public void thread(AutoSaverT save) {
 		System.out.println("저장옵션 선택!");
 		System.out.println("자동저장on(1) 자동저장off(2)");
 		System.out.println("선택");
 		Scanner scan = new Scanner(System.in);
 		int num = scan.nextInt();
 		
-		AutoSaverT save = new AutoSaverT(this);
-		
 		if(num==1) {
 			if(save.isAlive()) {
-				System.out.println("이미 자동저장이 진행중 입니다.");
+				System.out.println("이미 자동저장 중입니다..");
 			}
 			else {
 				save.setDaemon(true);
 				save.start();
+				System.out.println("자동저장 시작....");
 			}
 		}
 		else if(num==2) {
-			save.interrupt();
+			if(save.isAlive()) {
+				System.out.println("자동저장이 종료되었습니다.");
+				save.interrupt();
+				
+			}
 		}
 	}
 	
-	public void FileTxt() throws IOException{
-		PrintWriter pw = new PrintWriter(new FileWriter("src/project1/Ver08/AutoSaveBook.txt"));
+	public void FileTxt() {
 		try {
+			PrintWriter pw = 
+					new PrintWriter(
+							new FileWriter("src/project1/Ver08/AutoSaveBook.txt"));
 			
-			
-			
+			for(PhoneInfo pi : set) {
+				pw.println(pi);
+			}
+			pw.close();
+			System.out.println("저장중");
 		}
-		catch(Exception e) {
-			e.printStackTrace();
+		catch(IOException e) {
+			System.out.println("에러");
 		}
 	}
 	
@@ -217,6 +280,7 @@ public class PhoneBookManager implements SubMenuItem {
 		System.out.println("4.주소록 출력");
 		System.out.print("5.저장옵션 ");
 		System.out.println("6.프로그램 종료");
-		System.out.println("선택 : ");
+		System.out.println("==============================");
+		System.out.println("입력 : ");
 	}
 }

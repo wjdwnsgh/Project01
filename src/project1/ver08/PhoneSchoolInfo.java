@@ -16,7 +16,16 @@ public class PhoneSchoolInfo extends PhoneInfo {
 		super.showPhoneInfio();
 		System.out.println("전공: " + jun);
 		System.out.println("학년: " + hak);
+		System.out.println();
 	}
+
+	@Override
+	public String toString() {
+		
+		return "이름:"+ name + " 전화번호:" + phoneNumber + " 전공:" + jun + " 학년:"+ hak;
+	}
+	
+	
 	
 	
 }

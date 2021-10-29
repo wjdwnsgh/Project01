@@ -13,7 +13,14 @@ public class PhoneCompanyInfo extends PhoneInfo	{
 	public void showPhoneInfio() {
 		super.showPhoneInfio();
 		System.out.println("회사: " + com);
+		System.out.println();
 	}
+
+	@Override
+	public String toString() {
+		return "이름: "+name+" 전화번호: "+phoneNumber+" 회사: "+com;
+	}
+	
 	
 	
 }
