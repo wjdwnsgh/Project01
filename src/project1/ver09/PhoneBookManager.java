@@ -2,33 +2,51 @@ package project1.ver09;
 
 import java.util.Scanner;
 
-public class PhoneBookManager {
+import project1.ver09.OracleConnect;
+
+public class PhoneBookManager extends OracleConnect{
 
 	//멤버변수
 	private PhoneInfo[] myPi; //객체배열
 	private int numOfPi; // 저장할 변수
 	
+	
 	//생성자
 	public PhoneBookManager(int num) {
+		super("kosmo", "1234");
 		myPi = new PhoneInfo[num];
 		numOfPi = 0;
 	}
 	
-	public void dataInput(int choice) {
-		Scanner scan = new Scanner(System.in);
+	public void dataInput() {
 		
-		String pName, pPhoneNumber, pBirthday;
-		
-		System.out.println("이름: "); 
-		pName = scan.nextLine();
-		System.out.println("전화번호: "); 
-		pPhoneNumber = scan.nextLine();
-		System.out.println("생년월일: "); 
-		pBirthday = scan.nextLine();
-		
-		myPi[numOfPi++] = new PhoneInfo(pName, pPhoneNumber, pBirthday);
-		
-		System.out.println("데이터 입력이 완료되었습니다.");
+		try {
+			String query = "INSERT INTO phonebook_tb VALUES (seq_phonebook.nextval, ?, ?, ?)";
+			
+			psmt = con.prepareStatement(query);
+			
+			Scanner scan = new Scanner(System.in);
+			
+			String pName, pPhoneNumber, pBirthday;
+				
+			System.out.println("이름: "); 
+			pName = scan.nextLine();
+			System.out.println("전화번호: "); 
+			pPhoneNumber = scan.nextLine();
+			System.out.println("생년월일: "); 
+			pBirthday = scan.nextLine();
+			
+			psmt.setString(1, pName);
+			psmt.setString(2, pPhoneNumber);
+			psmt.setString(3, pBirthday);
+			
+			int num = psmt.executeUpdate();
+			
+			System.out.println(num+"행 입력");
+		}
+		catch(Exception e) {
+			System.out.println("에러발생");
+		}
 		
 	}
 	
@@ -36,60 +54,68 @@ public class PhoneBookManager {
 		
 		System.out.println("데이터 검색을 시작합니다..");
 		System.out.println("이름: ");
-		Scanner scan = new Scanner(System.in);
-		String Search = scan.nextLine();
-		
-		boolean a = false;
-		for(int i =0; i<numOfPi; i++) {
+		try {
 			
-			if(Search.compareTo(myPi[i].name)==0) {
-				myPi[i].showPhoneInfio();
-				System.out.println("데이터 검색이 완료되었습니다.");
+			String query = "SELECT * FROM phonebook_tb "
+					+ " WHERE phon_name LIKE '%'||?||'%' ";
+			
+			psmt = con.prepareStatement(query);
+			psmt.setString(1, scanValue("찾는이름"));
+			rs = psmt.executeQuery();
+			while(rs.next()) {
+				int idx = rs.getInt("idx");
+				String name = rs.getString("phon_name");
+				String phoneNumber = rs.getString("phon_number");
+				String birthday = rs.getString("phon_birth").substring(0, 10);
 				
-				a = true;
+				System.out.printf("%s %s %s\n", name, phoneNumber, birthday);
 			}
+			System.out.println("검색 완료!");
 			
 		}
-		if(a==false) {
-			System.out.println("찾는 정보가 없습니다.");
+		catch(Exception e) {
+			System.out.println("에러발생");
 		}
 		
 	}
 	
 	public void dataDelete() {
 		System.out.println("데이터 삭제를 시작합니다..");
-		Scanner scan = new Scanner(System.in);
-		System.out.println("이름: ");
-		String Delete = scan.nextLine();
 		
-		int index = -1;
-		
-		for(int i = 0; i<numOfPi; i++) {
+		try {
 			
-			if(Delete.compareTo(myPi[i].name)==0) {
-				myPi[i] = null;
-				
-				index = i;
-				
-				numOfPi--;
-				break;
-			}
+			String query = "DELETE FROM phonebook_tb WHERE phon_name=?";
+			psmt = con.prepareStatement(query);
+			
+			psmt.setString(1, scanValue("삭제할이름"));
+			int delete = psmt.executeUpdate();
+			System.out.println(delete+"행 삭제 완료");
+			
 		}
-		
-		if(index==-1) {
-			System.out.println("정보가 없어 삭제할 수 없습니다.");
-		}
-		else {
-			for(int i = index; i<numOfPi; i++) {
-				myPi[i] = myPi[i+1];
-			}
-			System.out.println("데이터 삭제가 완료되었습니다.");
+		catch(Exception e) {
+			System.out.println("에러발생");
 		}
 	}
 	
 	public void dataAllShow() {
-		for(int i =0; i<numOfPi; i++) {
-			myPi[i].showPhoneInfio();
+		try {
+			String query = "SELECT * FROM phonebook_tb";
+			psmt = con.prepareStatement(query);
+			
+			rs = psmt.executeQuery();
+			while(rs.next()) {
+				int idx = rs.getInt("idx");
+				String name = rs.getString("phon_name");
+				String phoneNumber = rs.getString("phon_number");
+				String birthday = rs.getString("phon_birth").substring(0, 10);
+				
+				System.out.printf("%s %s %s\n", name, phoneNumber, birthday);
+			}
+			System.out.println("출력 완료!");
+			
+		}
+		catch(Exception e) {
+			System.out.println("에러발생");
 		}
 	}
 	

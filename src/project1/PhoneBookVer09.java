@@ -19,7 +19,7 @@ public class PhoneBookVer09 {
 			int choice = scan.nextInt();			
 			switch(choice) {
 			case 1:
-				pb1.dataInput(choice);
+				pb1.dataInput();
 				break;
 			case 2:
 				pb1.dataSearch();
