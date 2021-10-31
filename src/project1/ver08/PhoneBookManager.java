@@ -222,7 +222,7 @@ public class PhoneBookManager implements SubMenuItem {
 			in.close();
 		}
 		catch(Exception e) {
-			System.out.println("복원완료");
+			
 		}
 		
 	}
@@ -270,6 +270,16 @@ public class PhoneBookManager implements SubMenuItem {
 		catch(IOException e) {
 			System.out.println("에러");
 		}
+	}
+	
+	public int choiceNum(int cho) throws MenuSelectException{
+		
+		if(cho>6 || cho<1) {
+			MenuSelectException num = new MenuSelectException();
+			throw num;
+		}
+		return cho;
+		
 	}
 	
 	public void printMenu() {
